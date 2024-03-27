@@ -2,7 +2,6 @@
     width: 60px; /* Increased size */
     height: 60px; /* Increased size */
     margin-right: 10px;
-    filter: invert(24%) sepia(92%) saturate(2823%) hue-rotate(310deg) brightness(101%) contrast(99%); /* Color adjustment */
 }
 
 header {

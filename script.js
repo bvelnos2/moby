@@ -16,86 +16,45 @@ function closePopup() {
     document.getElementById("popup-container").style.display = "none";
 }
 
-async function sendMessage(message) {
-    try {
-        const response = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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'
-            },
-            body: JSON.stringify({
-                model: 'text-davinci-003',
-                prompt: `Moby: ${message}`,
-                max_tokens: 10000
-            })
-        });
 
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`Failed to send message: ${errorMessage}`);
-        }
+document.getElementById('message-form').addEventListener('submit', sendMessage);
 
-        const data = await response.json();
-        return data.choices[0].text.trim();
-    } catch (error) {
-        console.error('Error:', error);
-        return 'Oops! Something went wrong.';
-    }
+
+function copyMessage(btn) {
+    const messageText = btn.previousElementSibling.textContent; // Get the text content of the message
+    navigator.clipboard.writeText(messageText); // Copy the text to clipboard
+    alert("Message copied to clipboard!"); // Optional: Show a notification to the user
 }
 
-document.getElementById('message-form').addEventListener('submit', async function (event) {
-    event.preventDefault(); // Prevent form submission
+async function sendMessage(event) {
+    event.preventDefault();
 
-    const userInput = document.getElementById('user-input').value;
-    if (!userInput.trim()) {
-        return;
-    }
+    const userInput = document.getElementById('user-input');
+    const userMessage = userInput.value.trim();
 
-    // Display user's message
-    displayMessage('You', userInput);
+    if (userMessage === '') return;
 
-    // Send user's message to the OpenAI Assistant
-    const assistantResponse = await sendMessage(userInput);
+    appendMessage('user', userMessage);
+    userInput.value = '';
 
-    // Display assistant's response
-    displayMessage('Moby', assistantResponse);
+    const response = await fetch('/ask', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: userMessage })
+    });
 
-    // Clear input field
-    document.getElementById('user-input').value = '';
-});
+    const data = await response.json();
+    const assistantMessage = data.message;
+    appendMessage('assistant', assistantMessage);
+}
 
-function displayMessage(sender, message) {
+function appendMessage(sender, message) {
     const chatContainer = document.getElementById('chat-container');
     const messageElement = document.createElement('div');
-    messageElement.classList.add('assistant-message');
-    const senderElement = document.createElement('div');
-    senderElement.classList.add('sender');
-    senderElement.textContent = sender;
-    const messageContent = document.createElement('div');
-    messageContent.classList.add('message-content');
-    messageContent.innerHTML = `
-        <img src="https://raw.githubusercontent.com/bvelnos2/tmoprojects/main/assets/images/Moby%20Logo-w.png" alt="Assistant Avatar" class="avatar">
-        <div class="copy-message-btn" onclick="copyMessage(this)">
-            <i class="material-icons">content_copy</i>
-        </div>
-    `;
-    const messageText = document.createElement('p');
-    messageText.textContent = message;
-    messageElement.appendChild(senderElement);
-    messageElement.appendChild(messageContent);
-    messageElement.appendChild(messageText);
+    messageElement.classList.add(`${sender}-message`);
+    messageElement.textContent = message;
     chatContainer.appendChild(messageElement);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
-
-function copyMessage(button) {
-    const messageText = button.parentNode.nextSibling.textContent;
-    navigator.clipboard.writeText(messageText)
-        .then(() => {
-            console.log('Message copied to clipboard:', messageText);
-        })
-        .catch((error) => {
-            console.error('Error copying message:', error);
-        });
-}
-
