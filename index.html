@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobyAI</title>
+    <link href="https://raw.githubusercontent.com/bvelnos2/tmoprojects/main/assets/images/Moby%20Logo-w.png" rel="icon" type="image/png"> <!-- Set favicon to the logo image -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .logo {
+            animation: breathing 8s infinite ease-in-out; /* Apply the breathing animation */
+            width: 100px; /* Adjust logo width */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        @keyframes breathing {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.03);
+            }
+            /* Increase scale */
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .assistant-message {
+            position: relative;
+        }
+
+        .message-content {
+            display: flex;
+            align-items: center; /* Align items vertically */
+        }
+
+        .copy-message-btn {
+            position: relative;
+            margin-left: auto; /* Push the button to the right */
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+            .copy-message-btn .material-icons {
+                color: #666;
+                font-size: 20px;
+            }
+
+        /* Popup styling */
+        .popup-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent; /* Set background color to transparent */
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none; /* Initially hidden */
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none; /* Initially hidden */
+        }
+
+        .popup-content {
+            text-align: center;
+            color: #fff; /* Set text color to white */
+        }
+
+        /* Close button styling */
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            color: #FE857A; /* Set text color */
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+            .close-btn:hover {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent; /* Set background color to transparent */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #888; /* Color of scrollbar thumb */
+            border-radius: 4px; /* Rounded corners of scrollbar thumb */
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background-color: #555; /* Color of scrollbar thumb on hover */
+            }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #333; /* Dark text color */
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px 0;
+            background-color: transparent; /* Transparent background */
+        }
+    </style>
+</head>
+<body>
+    <div class="full-screen-container">
+        <header>
+            <img src="https://raw.githubusercontent.com/bvelnos2/tmoprojects/main/assets/images/Moby%20Logo-w.png" alt="Logo" class="logo">
+        </header>
+        <div class="chat-container" id="chat-container">
+            <div class="assistant-message">
+                <div class="message-content">
+                    <img src="https://raw.githubusercontent.com/bvelnos2/tmoprojects/main/assets/images/Moby%20Logo-w.png" alt="Assistant Avatar" class="avatar">
+                    <div class="sender">Moby</div>
+                    <button class="copy-message-btn" onclick="copyMessage(this)">
+                        <i class="material-icons">content_copy</i>
+                    </button>
+                </div>
+                <p>Hey! I'm Moby, your T-Mobile assistant here to help you with anything you need! How can I assist you today?</p>
+            </div>
+        </div>
+        <form id="message-form" class="message-form">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup-container" id="popup-container">
+        <div class="popup-content">
+            <h2>Welcome!</h2>
+            <p>At the end of the day, Moby is still in its infancy, so know that it can be completely wrong. If you notice something is off or have a fun idea, let me know!</p>
+            <button class="close-btn" onclick="closePopup()">Close</button> <!-- Added close-btn class -->
+        </div>
+    </div>
+
+    <footer>Created by Blake Velnosky (Bvelnos2)</footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
