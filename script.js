@@ -1,56 +1,3 @@
-document.getElementById('message-form').addEventListener('submit', sendMessage);
-
-async function sendMessage(event) {
-    event.preventDefault();
-
-    const userInput = document.getElementById('user-input');
-    const userMessage = userInput.value.trim();
-
-    if (userMessage === '') return;
-
-    appendMessage('user', userMessage);
-    userInput.value = '';
-
-    const response = await fetch('/ask', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: userMessage })
-    });
-
-    const data = await response.json();
-    const assistantMessage = data.message;
-    appendMessage('assistant', assistantMessage);
-}
-
-function appendMessage(sender, message) {
-    const chatContainer = document.getElementById('chat-container');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add(`${sender}-message`);
-    messageElement.textContent = message;
-    chatContainer.appendChild(messageElement);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-function copyMessage(btn) {
-    const messageText = btn.previousElementSibling.textContent; // Get the text content of the message
-    navigator.clipboard.writeText(messageText); // Copy the text to clipboard
-    alert("Message copied to clipboard!"); // Optional: Show a notification to the user
-}
-
-// script.js
-function copyMessage(btn) {
-    // Find the message content relative to the clicked button
-    const messageContent = btn.parentElement.nextElementSibling.textContent.trim();
-
-    // Copy the message content to the clipboard
-    navigator.clipboard.writeText(messageContent);
-
-    // Optional: Show a notification to the user
-    alert("Message copied to clipboard!");
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     // Check if the popup has been shown before (using localStorage)
     if (!localStorage.getItem("popupShown")) {
@@ -71,15 +18,15 @@ function closePopup() {
 
 async function sendMessage(message) {
     try {
-        const response = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', { // Use the ChatGPT 3.5 model
+        const response = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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' // Replace with your actual API key
+                'Authorization': 'Bearer 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'
             },
             body: JSON.stringify({
-                model: 'text-davinci-003', // Use the ChatGPT 3.5 model
-                prompt: `Moby: ${message}`, // Prefix the message with the assistant's name
+                model: 'text-davinci-003',
+                prompt: `Moby: ${message}`,
                 max_tokens: 10000
             })
         });
@@ -97,7 +44,6 @@ async function sendMessage(message) {
     }
 }
 
-// Define a function to handle form submission
 document.getElementById('message-form').addEventListener('submit', async function (event) {
     event.preventDefault(); // Prevent form submission
 
@@ -119,7 +65,6 @@ document.getElementById('message-form').addEventListener('submit', async functio
     document.getElementById('user-input').value = '';
 });
 
-// Define a function to display messages in the chat container
 function displayMessage(sender, message) {
     const chatContainer = document.getElementById('chat-container');
     const messageElement = document.createElement('div');
@@ -143,7 +88,6 @@ function displayMessage(sender, message) {
     chatContainer.appendChild(messageElement);
 }
 
-// Define a function to copy message text to clipboard
 function copyMessage(button) {
     const messageText = button.parentNode.nextSibling.textContent;
     navigator.clipboard.writeText(messageText)
@@ -154,20 +98,4 @@ function copyMessage(button) {
             console.error('Error copying message:', error);
         });
 }
-
-// Define a function to close the popup
-function closePopup() {
-    document.getElementById('popup-container').style.display = 'none';
-    document.getElementById('popup-overlay').style.display = 'none';
-}
-
-// Show the popup on first-time visit
-document.addEventListener('DOMContentLoaded', function () {
-    const isFirstTimeVisit = localStorage.getItem('isFirstTimeVisit');
-    if (!isFirstTimeVisit) {
-        document.getElementById('popup-container').style.display = 'block';
-        document.getElementById('popup-overlay').style.display = 'block';
-        localStorage.setItem('isFirstTimeVisit', 'true');
-    }
-});
 
